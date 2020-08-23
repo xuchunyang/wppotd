@@ -8,10 +8,11 @@ module.exports = async (r, s) => {
     const filenamesJson = await getImages(date);
     const filename = filenamesJson.parse.images[0];
     const srcJson = await getImageSrc(filename);
+    s.setHeader("Cache-Control", "max-age=0, s-maxage=86400");
     s.statusCode = 200;
     s.json(srcJson);
   } catch (e) {
-    s.statusCode = 200;
+    s.statusCode = 400;
     s.json({error: e.message});
   }
 };
