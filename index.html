@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Wikipedia Picture of the day</title>
+  </head>
+  <body>
+    <main>
+    </main>
+    <template>
+      <figure>
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Common_blues_%28Polyommatus_icarus%29_mating%2C_male_%28l%29_and_female_%28r%29.jpg/1024px-Common_blues_%28Polyommatus_icarus%29_mating%2C_male_%28l%29_and_female_%28r%29.jpg"
+             width="1024"
+             height="1024"
+             alt="Common blues (Polyommatus icarus) mating, male (l) and female (r).jpg">
+      </figure>
+    </template>
+    <script>
+      const main = document.querySelector("main");
+      const template = document.querySelector("template");
+      const date = new Date();
+      const dateStr = date.toISOString().slice(0, 10);
+
+      async function refresh() {
+        const url = "/api/get?date=" + dateStr;
+        main.textContent = `Fetching ${location.origin}/${url} ...`
+        const resp = await fetch(url);
+        const json = await resp.json();
+
+        const clone = template.content.cloneNode(true);
+        const figure = clone.querySelector("figure");
+        const img = figure.querySelector("img");
+        img.src = json.thumbnail.url;
+        img.alt = json.title;
+        img.width = json.thumbnail.width;
+        img.height = json.thumbnail.height;
+        main.textContent = "";
+        main.appendChild(figure);
+      }
+
+      refresh().catch(e => main.textContent = `Error: ${e.message}`);
+    </script>
+  </body>
+</html>
