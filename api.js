@@ -1,14 +1,13 @@
 module.exports = { getImages, getImageSrc };
 
 // Get filenaem
-// https://en.wikipedia.org/w/api.php?page=Template:POTD_protected/2020-08-23&format=json&action=parse
-// https://en.wikipedia.org/w/api.php?page=Template%3APOTD_protected%2F2020-08-23..
+// https://en.wikipedia.org/w/api.php?page=Template:POTD/2020-08-23&format=json&action=parse
 // Get src
 // https://commons.wikimedia.org/w/rest.php/v1/file/File:Common_blues_(Polyommatus_icarus)_mating,_male_(l)_and_female_(r).jpg
 async function getImages(date = new Date()) {
   if (!date) date = new Date();
   const dateStr = typeof date === "string" ? date : dateToUTCString(date);
-  const url = `https://en.wikipedia.org/w/api.php?action=parse&format=json&page=Template:POTD_protected/${dateStr}`;
+  const url = `https://en.wikipedia.org/w/api.php?action=parse&format=json&page=Template:POTD/${dateStr}`;
   const json = await getJson(url);
   return json;
 }
