@@ -134,9 +134,12 @@
         switch (e.key) {
         case "ArrowLeft":
           updateDate(-1);
+          getImage();
+          break;
         case "ArrowRight":
           updateDate(+1);
           getImage();
+          break;
         }
       };
     </script>
