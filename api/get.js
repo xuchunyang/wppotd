@@ -6,6 +6,11 @@ module.exports = async (r, s) => {
   const { date } = r.query;
   try {
     const filenamesJson = await getImages(date);
+    if (filenamesJson.error) {
+      s.statusCode = 400;
+      s.json(filenamesJson);
+      return;
+    }
     const filename = filenamesJson.parse.images[0];
     const srcJson = await getImageSrc(filename);
     s.setHeader("Cache-Control", "max-age=0, s-maxage=86400");
