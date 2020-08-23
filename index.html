@@ -10,6 +10,10 @@
         font-family: system-ui, sans-serif;
       }
 
+      main {
+        text-align: center;
+      }
+
       figure {
         margin: 0;
       }
@@ -25,7 +29,7 @@
       form {
         display: flex;
         justify-content: center;
-        margin: 0.5em 0;
+        margin: 0.5em 0 1em 0;
       }
 
       input,
@@ -53,10 +57,12 @@
 
     <template>
       <figure>
-        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Common_blues_%28Polyommatus_icarus%29_mating%2C_male_%28l%29_and_female_%28r%29.jpg/1024px-Common_blues_%28Polyommatus_icarus%29_mating%2C_male_%28l%29_and_female_%28r%29.jpg"
-             width="1024"
-             height="1024"
-             alt="Common blues (Polyommatus icarus) mating, male (l) and female (r).jpg">
+        <a href="https://en.wikipedia.org/wiki/Template:POTD_protected/2020-08-23">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Common_blues_%28Polyommatus_icarus%29_mating%2C_male_%28l%29_and_female_%28r%29.jpg/1024px-Common_blues_%28Polyommatus_icarus%29_mating%2C_male_%28l%29_and_female_%28r%29.jpg"
+               width="1024"
+               height="1024"
+               alt="Common blues (Polyommatus icarus) mating, male (l) and female (r).jpg">
+        </a>
       </figure>
     </template>
 
@@ -67,7 +73,7 @@
       date.value = new Date().toISOString().slice(0, 10);
 
       async function getImage() {
-        const url = "/api/get?date=" + date.value;
+        const url = "api/get?date=" + date.value;
         main.textContent = `Fetching ${location.origin}/${url} ...`
         try {
           const resp = await fetch(url);
@@ -75,7 +81,9 @@
 
           const clone = template.content.cloneNode(true);
           const figure = clone.querySelector("figure");
+          const a = figure.querySelector("a");
           const img = figure.querySelector("img");
+          a.href = `https://en.wikipedia.org/wiki/Template:POTD_protected/${date.value}`;
           img.src = json.thumbnail.url;
           img.alt = json.title;
           img.width = json.thumbnail.width;
