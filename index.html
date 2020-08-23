@@ -91,6 +91,9 @@
           const resp = await fetch(url);
           const json = await resp.json();
 
+          if (json.error)
+            throw new Error(json.error);
+
           const clone = template.content.cloneNode(true);
           const figure = clone.querySelector("figure");
           const a = figure.querySelector("a");
@@ -111,15 +114,30 @@
 
       document.querySelectorAll("form button").forEach(btn => {
         btn.onclick = (e) => {
-          const current = new Date(date.value);
-          current.setDate(current.getDate() + Number(btn.dataset.change));
-          date.value = current.toISOString().slice(0, 10);
+          updateDate(Number(btn.dataset.change));
           getImage();
         };
       });
 
+      function updateDate(change) {
+        const current = new Date(date.value);
+        current.setDate(current.getDate() + change);
+        date.value = current.toISOString().slice(0, 10);
+      }
+
       document.querySelector("input[type='date']").onchange = (e) => {
         getImage();
+      };
+
+      // XXX throttling
+      document.onkeydown = e => {
+        switch (e.key) {
+        case "ArrowLeft":
+          updateDate(-1);
+        case "ArrowRight":
+          updateDate(+1);
+          getImage();
+        }
       };
     </script>
   </body>
