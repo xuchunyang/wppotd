@@ -72,7 +72,18 @@
       const date = document.querySelector("input[type='date']");
       date.value = new Date().toISOString().slice(0, 10);
 
+      function saveDate() {
+        localStorage.setItem("date", date.value);
+      }
+
+      function loadDate() {
+        date.value = localStorage.getItem("date") || date.value;
+      }
+
+      loadDate();
+
       async function getImage() {
+        saveDate();
         const url = "api/get?date=" + date.value;
         main.textContent = `Fetching ${location.origin}/${url} ...`
         try {
