@@ -4,10 +4,53 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Wikipedia Picture of the day</title>
+    <style>
+      body {
+        margin: 0;
+        font-family: system-ui, sans-serif;
+      }
+
+      figure {
+        margin: 0;
+      }
+
+      img {
+        margin: 0 auto;
+        max-width: 100%;
+        display: block;
+        object-fit: contain;
+        object-position: center top;
+      }
+
+      form {
+        display: flex;
+        justify-content: center;
+        margin: 0.5em 0;
+      }
+
+      input,
+      button {
+        font-family: inherit;
+        font-size: 100%;
+        padding: 0.1em 1em;
+      }
+
+      input {
+        margin: 0 1em;
+      }
+
+    </style>
   </head>
   <body>
+    <form>
+      <button data-change="-1" type="button">Prev</button>
+      <input type="date">
+      <button data-change="+1" type="button">Next</button>
+    </form>
+
     <main>
     </main>
+
     <template>
       <figure>
         <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Common_blues_%28Polyommatus_icarus%29_mating%2C_male_%28l%29_and_female_%28r%29.jpg/1024px-Common_blues_%28Polyommatus_icarus%29_mating%2C_male_%28l%29_and_female_%28r%29.jpg"
@@ -16,30 +59,48 @@
              alt="Common blues (Polyommatus icarus) mating, male (l) and female (r).jpg">
       </figure>
     </template>
+
     <script>
       const main = document.querySelector("main");
       const template = document.querySelector("template");
-      const date = new Date();
-      const dateStr = date.toISOString().slice(0, 10);
+      const date = document.querySelector("input[type='date']");
+      date.value = new Date().toISOString().slice(0, 10);
 
-      async function refresh() {
-        const url = "/api/get?date=" + dateStr;
+      async function getImage() {
+        const url = "/api/get?date=" + date.value;
         main.textContent = `Fetching ${location.origin}/${url} ...`
-        const resp = await fetch(url);
-        const json = await resp.json();
+        try {
+          const resp = await fetch(url);
+          const json = await resp.json();
 
-        const clone = template.content.cloneNode(true);
-        const figure = clone.querySelector("figure");
-        const img = figure.querySelector("img");
-        img.src = json.thumbnail.url;
-        img.alt = json.title;
-        img.width = json.thumbnail.width;
-        img.height = json.thumbnail.height;
-        main.textContent = "";
-        main.appendChild(figure);
+          const clone = template.content.cloneNode(true);
+          const figure = clone.querySelector("figure");
+          const img = figure.querySelector("img");
+          img.src = json.thumbnail.url;
+          img.alt = json.title;
+          img.width = json.thumbnail.width;
+          img.height = json.thumbnail.height;
+          main.textContent = "";
+          main.appendChild(figure);
+        } catch (e) {
+          main.textContent = `Error: ${e.message}`;
+        }
       }
 
-      refresh().catch(e => main.textContent = `Error: ${e.message}`);
+      getImage();
+
+      document.querySelectorAll("form button").forEach(btn => {
+        btn.onclick = (e) => {
+          const current = new Date(date.value);
+          current.setDate(current.getDate() + Number(btn.dataset.change));
+          date.value = current.toISOString().slice(0, 10);
+          getImage();
+        };
+      });
+
+      document.querySelector("input[type='date']").onchange = (e) => {
+        getImage();
+      };
     </script>
   </body>
 </html>
