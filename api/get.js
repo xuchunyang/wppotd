@@ -7,7 +7,7 @@ module.exports = async (r, s) => {
   try {
     const filenamesJson = await getImages(date);
     const filename = filenamesJson.parse.images[0];
-    const srcJson = await getImageSrc(filenamesJson);
+    const srcJson = await getImageSrc(filename);
     s.statusCode = 200;
     s.json(srcJson);
   } catch (e) {
