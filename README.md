@@ -1,6 +1,10 @@
 # English Wikipedia - Picture of the day
 
+A simple viewer for English Wikipedia's picture of the day:
+
 https://wppotd.vercel.app/
+
+![screen shot of the above website](Screen-Shot-2020-08-24-at-12.30.06.png)
 
 ## API
 
