@@ -54,7 +54,7 @@ function getJson(url, options) {
       console.log(response.statusCode);
       console.log(response.headers);
       if (response.statusCode < 200 || response.statusCode > 299) {
-        reject(new Error(`HTTP error! status: ${response.statusCode}`));
+        reject(new Error(`HTTP error! ${url} status: ${response.statusCode}`));
         return;
       }
       const contentType = response.headers["content-type"];
