@@ -41,7 +41,11 @@
       }
 
       input {
-        margin: 0 1em;
+        margin: 0 0.5em;
+      }
+
+      button.random {
+        margin-left: 1em;
       }
 
     </style>
@@ -51,6 +55,7 @@
       <button data-change="-1" type="button">Prev</button>
       <input type="date">
       <button data-change="+1" type="button">Next</button>
+      <button class="random" type="button">Random</button>
     </form>
 
     <main>
@@ -112,7 +117,7 @@
 
       getImage();
 
-      document.querySelectorAll("form button").forEach(btn => {
+      document.querySelectorAll("form button[data-change]").forEach(btn => {
         btn.onclick = (e) => {
           updateDate(Number(btn.dataset.change));
           getImage();
@@ -141,6 +146,19 @@
           getImage();
           break;
         }
+      };
+
+      // https://stackoverflow.com/a/9035732/2999892
+      function randomDate(start, end) {
+        return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
+      }
+
+      document.querySelector("button.random").onclick = e => {
+        // https://en.wikipedia.org/wiki/Wikipedia:Picture_of_the_day/Archive
+        const d = randomDate(new Date(2005, 0, 1), new Date());
+        console.log("Random date", d);
+        date.value = d.toISOString().slice(0, 10);
+        getImage();
       };
     </script>
   </body>
