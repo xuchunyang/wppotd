@@ -97,7 +97,7 @@
           const json = await resp.json();
 
           if (json.error)
-            throw new Error(json.error);
+            throw new Error(JSON.stringify(json.error));
 
           const clone = template.content.cloneNode(true);
           const figure = clone.querySelector("figure");
